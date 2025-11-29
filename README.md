@@ -17,7 +17,7 @@ Tomato Disease Identification
 
 3. 实验数据集：TDD
 3.1 数据集概况
-本研究基于自建番茄叶片常见病害检测数据集（Tomato Disease Detection Dataset, TDD），数据集已随项目上传至仓库的 WPLDD/ 文件夹，无需额外下载。
+本研究基于自建番茄叶片常见病害检测数据集（Tomato Disease Detection Dataset, TDD），数据集已随项目上传至仓库的 TDD/ 文件夹，无需额外下载。
 
 数据集名称	包含类别	图像总数	图像分辨率	数据分布（训练:测试）
 TDD	 Healthy  Leaf blight Target spot  Early blight	详见数据集说明文件	统一 resize 至 256×256	3:1（通过代码自动划分）
@@ -34,8 +34,8 @@ TDD/
 推荐使用Anaconda创建虚拟环境，确保依赖版本匹配（避免兼容性问题，尤其适配PyTorch 2.5.1）：
 
 # 1. 创建并激活虚拟环境
-conda create -n hh-former-wheat python=3.12.9
-conda activate hh-former-wheat
+conda create -n ACHC python=3.12.9
+conda activate ACHC
 
 # 2. 安装PyTorch与TorchVision（需适配CUDA版本，示例为CUDA 12.1；CPU用户可替换为cpu版本）
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
@@ -101,11 +101,9 @@ python predict.py \
 百度网盘分享： 链接: https://pan.baidu.com/s/1OG8uLUL0_OQL-BaDWNEhmA 提取码: 4ycx （复制这段内容后打开百度网盘手机 App，操作更方便） 本地权重文件：weights/best_hh_former.pth（若仓库内权重存在大小限制，可通过上述网盘链接获取完整版本）； 适用场景：仅针对小麦叶片的 “白粉病、枯萎病、叶锈病、斑枯病、健康叶片” 五类分类，若需扩展其他小麦病害，建议基于此权重微调（冻结浅层注意力模块，仅训练分类头与深层特征融合层，可减少 50% 以上训练数据量）。
 
 7. 项目文件结构
-hh-former-for-wheat-leaf-disease/
-├── WPLDD/                # 自建小麦叶片病害数据集（含白粉病、条锈病、叶锈病、健康叶片）
-├── examples/             # 预测示例图像（如wheat_powdery_mildew.jpg、wheat_stripe_rust.jpg）
+ACHC-for-Tomato-Disease-Identification/
+├── TDD/                # 自建小麦叶片病害数据集（含斑枯病、轮斑病、早疫病、健康叶片）
 ├── models/               # 模型定义文件夹
-│   └── hh_former.py      # HH-Former核心代码（含分层注意力、金字塔结构）
 ├── dataset/              # 数据处理文件夹
 │   ├my_dataset.py      # 对图像进行预处理（按索引返回单张图像及其标签，供 DataLoader 批量加载数据）
 │   ├── data_loader.py    # WPLDD数据集加载与预处理（自动划分训练/测试集+数据增强）
@@ -133,5 +131,5 @@ VWLM: A Novel and High Accuracy Deep Learning model for Wheat Disease Identifica
 9.2 联系方式
 若遇到代码运行问题或学术交流需求，请联系：
 
-邮箱：changyibu@huuc.edu.cn
+邮箱：liyan@huuc.edu.cn
 GitHub Issue：直接在本仓库提交Issue，会在1-3个工作日内回复。
