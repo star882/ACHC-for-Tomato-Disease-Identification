@@ -75,48 +75,60 @@ python train.py \
   --log_interval 10  # 每10个batch打印一次训练日志
 关键参数说明：
 参数名	含义	默认值
---data_dir	WPLDD数据集根目录路径	./TDD
+--data_dir	  TDD数据集根目录路径	./TDD
 --epochs	训练轮数	100
 --batch_size	批次大小（根据GPU显存调整，8/16/32）	16
 --lr	初始学习率	1e-4
 --save_dir	训练权重保存目录	./weights
 --device	训练设备（cuda:0 或 cpu）	cuda:0
 训练输出：
-训练过程中，模型会自动保存验证集准确率最高的权重至 --save_dir 目录，文件名为 best-model.pth；
-训练日志（损失值、准确率）会实时打印，并保存至 train_log.txt。
+训练过程中，模型会自动保存验证集准确率最高的权重，文件名为 best-model.pth；
+训练日志（损失值、准确率）会实时打印。
 6.2 模型预测
-使用训练好的权重进行单张小麦叶片图像预测，运行 predict.py 脚本，示例命令：
+使用训练好的权重进行单张番茄叶片图像预测，运行 predict.py 脚本，示例命令：
 
 python predict.py \
-  --image_path ./examples/wheat_stripe_rust.jpg \  # 输入图像路径（示例图像存于examples/）
-  --weight_path ./weights/best_hh_former.pth \  # 预训练权重路径
+  --image_path ./TDD/Test/Target_spot/Target_spot1602.jpg \
+  --model_path ./weights/DualAttentionAlexNet_Plant.pth \
+  --class_json ./class_indices.json \
   --device cuda:0
 预测输出示例：
-输入图像路径：./examples/wheat_stripe_rust.jpg
-预测类别：小麦条锈病
-置信度：0.9961
+📊 PERFORMANCE METRICS RESULTS:
+• Parameters: 10.57 M
+• FLOPs (estimated): 6.81 G
+• Inference Speed: 2.42 ± 0.15 ms
+
+🎯 PREDICTION RESULT:
+Most likely class: Target spot
+Probability: 0.996
 6.3 预训练权重
 提供基于 TDD 数据集训练完成的最优权重，可直接用于预测或微调。除随项目仓库附带的权重外，也可通过百度网盘获取完整权重文件：
 
-百度网盘分享： 链接: https://pan.baidu.com/s/1OG8uLUL0_OQL-BaDWNEhmA 提取码: 4ycx （复制这段内容后打开百度网盘手机 App，操作更方便） 本地权重文件：weights/best_hh_former.pth（若仓库内权重存在大小限制，可通过上述网盘链接获取完整版本）； 适用场景：仅针对小麦叶片的 “白粉病、枯萎病、叶锈病、斑枯病、健康叶片” 五类分类，若需扩展其他小麦病害，建议基于此权重微调（冻结浅层注意力模块，仅训练分类头与深层特征融合层，可减少 50% 以上训练数据量）。
+百度网盘分享： 链接: https://pan.baidu.com/s/1OG8uLUL0_OQL-BaDWNEhmA 提取码: 4ycx （复制这段内容后打开百度网盘手机 App，操作更方便） 本地权重文件：weights/best_hh_former.pth（若仓库内权重存在大小限制，可通过上述网盘链接获取完整版本）； 适用场景：仅针对番茄叶片的 “斑枯病、轮斑病、早疫病、健康叶片” 五类分类，若需扩展其他番茄病害，建议基于此权重微调（冻结浅层注意力模块，仅训练分类头与深层特征融合层，可减少 50% 以上训练数据量）。
 
 7. 项目文件结构
 ACHC-for-Tomato-Disease-Identification/
-├── TDD/                # 自建小麦叶片病害数据集（含斑枯病、轮斑病、早疫病、健康叶片）
-├── models/               # 模型定义文件夹
-├── dataset/              # 数据处理文件夹
-│   ├my_dataset.py      # 对图像进行预处理（按索引返回单张图像及其标签，供 DataLoader 批量加载数据）
-│   ├── data_loader.py    # WPLDD数据集加载与预处理（自动划分训练/测试集+数据增强）
-│   ├── wheat_gan.py   # 使用GAN生成部分病害图像数据集
-├── train.py              # 模型训练脚本
-├── predict.py            # 模型预测脚本
-└── README.md             # 项目说明文档（本文档）
-8. 已知问题与注意事项
-数据集适配：当前模型与权重仅针对 WPLDD/ 中的“斑枯病、白粉病、叶枯病、叶锈病、健康叶片”五类，若新增病害类别，需补充对应数据集并重新训练（建议每类样本量≥500张，确保模型泛化性）；
+├── TDD/                          # 番茄病害数据集
+├── data/                         # 数据处理文件夹（可选）
+│   ├── train/                   # 训练集
+│   ├── val/                     # 验证集
+│   └── test/                    # 测试集
+├── models/                       # 模型定义文件
+│   ├── model.py                 # 基础AlexNet
+│   ├── model_optimized.py       # 优化版AlexNet
+│   ├── model_cood_attention.py  # 添加坐标注意力模型
+│   ├── model_hybridcs.py         #添加通道注意力模型
+│   └── model__both_enhanced02.py # ACHC模型
+├── train.py                      # 训练脚本
+├── predict.py                    # 预测与性能评估脚本
+├── class_indices.json           # 类别索引文件
+└── README.md                     # 项目说明文档
+9. 已知问题与注意事项
+数据集适配：当前模型与权重仅针对“斑枯病、轮斑病、早疫病、健康叶片”四类，若新增病害类别，需补充对应数据集并重新训练（建议每类样本量≥500张，确保模型泛化性）；
 图像分辨率：输入图像会自动resize至256×256，若原始图像分辨率过低（<128×128），可能导致早期微小病斑特征丢失，建议输入图像分辨率≥256×256；
 CUDA版本问题：若安装PyTorch时出现CUDA不兼容，可替换为CPU版本（需将所有脚本的--device改为cpu），但训练效率会大幅下降；
 田间场景适配：若用于实际田间检测，建议先通过 dataset/data_loader.py 中的数据增强模块扩充数据集，提升模型对田间复杂环境的适应能力。
-9. 引用与联系方式
+10. 引用与联系方式
 9.1 引用方式
 论文处于投刊阶段，正式发表后将更新BibTeX引用格式，当前可临时引用：
 
