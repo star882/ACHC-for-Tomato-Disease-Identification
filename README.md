@@ -104,7 +104,7 @@ Probability: 0.996
 6.3 预训练权重
 提供基于 TDD 数据集训练完成的最优权重，可直接用于预测或微调。除随项目仓库附带的权重外，也可通过百度网盘获取完整权重文件：
 
-百度网盘分享： 链接: https://pan.baidu.com/s/1OG8uLUL0_OQL-BaDWNEhmA 提取码: 4ycx （复制这段内容后打开百度网盘手机 App，操作更方便） 本地权重文件：weights/best_hh_former.pth（若仓库内权重存在大小限制，可通过上述网盘链接获取完整版本）； 适用场景：仅针对番茄叶片的 “斑枯病、轮斑病、早疫病、健康叶片” 五类分类，若需扩展其他番茄病害，建议基于此权重微调（冻结浅层注意力模块，仅训练分类头与深层特征融合层，可减少 50% 以上训练数据量）。
+百度网盘分享： 链接: https://pan.baidu.com/s/1CHoAXlxq5zYGMwRJijomkA 提取码: rcum（复制这段内容后打开百度网盘手机 App，操作更方便） 本地权重文件：DualAttentionAlexNet_Plant.pth（若仓库内权重存在大小限制，可通过上述网盘链接获取完整版本）； 适用场景：仅针对番茄叶片的 “斑枯病、轮斑病、早疫病、健康叶片” 四类分类，若需扩展其他番茄病害，建议基于此权重微调（冻结浅层注意力模块，仅训练分类头与深层特征融合层，可减少 50% 以上训练数据量）。
 
 7. 项目文件结构
 ACHC-for-Tomato-Disease-Identification/
@@ -126,8 +126,7 @@ ACHC-for-Tomato-Disease-Identification/
 9. 已知问题与注意事项
 数据集适配：当前模型与权重仅针对“斑枯病、轮斑病、早疫病、健康叶片”四类，若新增病害类别，需补充对应数据集并重新训练（建议每类样本量≥500张，确保模型泛化性）；
 图像分辨率：输入图像会自动resize至256×256，若原始图像分辨率过低（<128×128），可能导致早期微小病斑特征丢失，建议输入图像分辨率≥256×256；
-CUDA版本问题：若安装PyTorch时出现CUDA不兼容，可替换为CPU版本（需将所有脚本的--device改为cpu），但训练效率会大幅下降；
-田间场景适配：若用于实际田间检测，建议先通过 dataset/data_loader.py 中的数据增强模块扩充数据集，提升模型对田间复杂环境的适应能力。
+CUDA版本问题：若安装PyTorch时出现CUDA不兼容，可替换为CPU版本（需将所有脚本的--device改为cpu），但训练效率会大幅下降。
 10. 引用与联系方式
 9.1 引用方式
 论文处于投刊阶段，正式发表后将更新BibTeX引用格式，当前可临时引用：
@@ -137,7 +136,7 @@ CUDA版本问题：若安装PyTorch时出现CUDA不兼容，可替换为CPU版�
 VWLM: A Novel and High Accuracy Deep Learning model for Wheat Disease Identification },
   author={[作者姓名，待发表时补充]},
   journal={[期刊名称，待录用后补充]},
-  year={2025},
+  year={2026},
   note={Manuscript submitted for publication}
 }
 9.2 联系方式
